@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SST MCQ Test</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --primary-hover: #2980b9;
+            --success: #2ecc71;
+            --success-hover: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --card-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--text-dark);
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 2.2em;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .header-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .btn-back {
+            background: #e2e8f0;
+            color: #475569;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: none;
+            transition: all 0.2s;
+        }
+
+        .btn-back:hover {
+            background: #cbd5e1;
+        }
+
+        /* Subject Grid (Screen 1) */
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .subject-card {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 25px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .subject-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.15);
+        }
+
+        .subject-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .subject-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* Lesson List (Screen 2) */
+        .lesson-list {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .lesson-btn {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .lesson-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: #f0f7ff;
+            transform: translateX(4px);
+        }
+
+        /* Grayed out state for empty lessons */
+        .lesson-btn:disabled {
+            background: #f1f5f9;
+            color: #94a3b8;
+            border-color: #e2e8f0;
+            cursor: not-allowed;
+        }
+
+        .badge {
+            font-size: 0.75em;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: var(--primary);
+            color: white;
+            font-weight: bold;
+        }
+
+        .badge.empty {
+            background: #cbd5e1;
+            color: #475569;
+        }
+
+        /* Setup & Quiz Screens */
+        .setup-screen { display: none; text-align: center; }
+        .setup-screen h3 { font-size: 1.5em; margin-bottom: 10px; }
+        #totalFoundText { color: var(--text-muted); font-weight: 500; margin-bottom: 25px; }
+
+        .select-style {
+            padding: 12px 16px;
+            font-size: 1em;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            background: #f8fafc;
+            margin-bottom: 25px;
+            width: 100%;
+            max-width: 300px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .btn-main {
+            padding: 14px 40px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+            display: block;
+        }
+        .btn-main:hover { background: var(--primary-hover); transform: translateY(-2px); }
+
+        .progress-bar-container {
+            background: #e2e8f0;
+            height: 10px;
+            border-radius: 5px;
+            margin: 20px 0 10px 0;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+        .status-text { text-align: right; font-size: 0.9em; font-weight: 600; color: var(--text-muted); margin-bottom: 20px; }
+
+        /* Quiz Options */
+        .question-text { font-weight: 700; font-size: 1.3em; margin-bottom: 20px; line-height: 1.4; }
+        .options-container { display: flex; flex-direction: column; gap: 12px; }
+        
+        .option-label {
+            display: flex; align-items: center; gap: 14px;
+            padding: 16px; border: 2px solid #e2e8f0; border-radius: 10px;
+            cursor: pointer; font-weight: 500; transition: all 0.2s;
+        }
+        .option-label:hover { background: #f8fafc; border-color: #cbd5e1; }
+        
+        input[type="radio"] {
+            appearance: none; width: 22px; height: 22px; border: 2px solid #cbd5e1;
+            border-radius: 50%; display: grid; place-content: center; cursor: pointer;
+        }
+        input[type="radio"]::before {
+            content: ""; width: 12px; height: 12px; border-radius: 50%;
+            transform: scale(0); transition: 120ms transform ease-in-out;
+            background-color: var(--primary);
+        }
+        input[type="radio"]:checked::before { transform: scale(1); }
+        input[type="radio"]:checked { border-color: var(--primary); }
+
+        .correct-ans { background: var(--success) !important; color: white !important; border-color: var(--success-hover) !important; }
+        .correct-ans input[type="radio"]::before { background-color: white; }
+        .correct-ans input[type="radio"] { border-color: white; }
+
+        .wrong-ans { background: var(--danger) !important; color: white !important; border-color: #c0392b !important; }
+        .wrong-ans input[type="radio"]::before { background-color: white; }
+        .wrong-ans input[type="radio"] { border-color: white; }
+        
+        .disable-click { pointer-events: none; }
+
+        .nav-actions { display: flex; justify-content: space-between; margin-top: 30px; gap: 15px; }
+        .btn-nav { flex: 1; padding: 14px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1em; color: white; transition: 0.2s; }
+        #skipBtn { background: var(--warning); }
+        #skipBtn:hover:not(:disabled) { background: #d35400; }
+        #skipBtn:disabled { background: #e2e8f0 !important; color: #94a3b8; cursor: not-allowed; }
+        #nextBtn { background: var(--primary); }
+        #nextBtn:hover:not(:disabled) { background: var(--primary-hover); }
+        #nextBtn:disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; }
+
+        /* Results */
+        .result-box { display: none; text-align: center; padding: 20px 0; }
+        .result-box h2 { font-size: 2em; margin-bottom: 10px; }
+        .result-box h3 { color: var(--text-muted); margin-bottom: 30px; }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px; border-radius: 12px; }
+            h1 { font-size: 1.8em; }
+            .nav-actions { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-controls">
+        <button class="btn-back" id="backBtn" onclick="goBack()">← Back</button>
+        <h1 id="mainTitle">SST MCQ Test</h1>
+        <div style="width: 70px;"></div> <!-- Spacer to keep title centered -->
+    </div>
+
+    <!-- Screen 1: Subject Selection -->
+    <div id="subjectScreen" class="subject-grid"></div>
+
+    <!-- Screen 2: Lesson Selection -->
+    <div id="lessonScreen" class="lesson-list"></div>
+
+    <!-- Screen 3: Setup Quiz -->
+    <div id="setupScreen" class="setup-screen">
+        <h3 id="setupLessonTitle">Quiz Setup</h3>
+        <p id="totalFoundText">Total questions available: 0</p>
+        <select id="quantitySelect" class="select-style"></select>
+        <button class="btn-main" onclick="startQuizGameplay()">Start Quiz</button>
+    </div>
+
+    <!-- Screen 4: Quiz Gameplay -->
+    <div id="quizApp" style="display:none;">
+        <div class="progress-bar-container">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="status-text" id="statusText">Question 1 of 0</div>
+        <div id="dynamicQuestionBox"></div>
+        <div class="nav-actions">
+            <button style="color: #ffffff; background: #31d931;" class="btn-nav" id="backBtn" onclick="goBack()">← Home</button>
+            <button class="btn-nav" id="skipBtn" onclick="skipQuestion()">Skip</button>
+            <button class="btn-nav" id="nextBtn" onclick="nextQuestion()" disabled>Next Question</button>
+        </div>
+    </div>
+    
+    <!-- Screen 5: Results -->
+    <div class="result-box" id="resultBox"></div>
+</div>
+
+<script>
+    // =====================================================================
+    // 📚 QUIZ DATABASE - ADD YOUR QUESTIONS HERE!
+    // Format required:
+    // Question Line
+    // Correct Answer Line
+    // Option 2 Line
+    // Option 3 Line
+    // Option 4 Line
+    // (Leave a blank line between questions)
+    // =====================================================================
+    
+    const quizDatabases = {
+        history: {
+            icon: "📜",
+            title: "History",
+            lessons: [
+                {
+                    name: "Lesson 1: Rise of Nationalism in Europe",
+                    data: `
+When was Guiseppe Mazzini born:
+1805
+1807
+1707
+1809
+
+When was Carbonari (secret society) formed:
+1810
+1820
+1830
+1804
+
+When did the French Revolution occur:
+1789
+1799
+1805
+1787
+
+When was Zollverien formed:
+1834
+1822
+1844
+1848
+
+When did King of prussia William 1st proclamed as the king of united Germany:
+1871
+1888
+1861
+1873
+
+When was Burboun dynasty again overthrowed by the frech liberals:
+1830
+1840
+1848
+1828
+
+The German kindoms were reduced into ___ confederations:
+39
+32
+49
+12
+
+How many members were in the frankfut Parliament:
+831
+631
+382
+820
+
+When was Frankfut Parliament formed:
+May 1848
+June 1848
+May 1830
+July 1821
+
+The Frankfut parliament came to an end in:
+May 1849
+March 1849
+May 1851
+December 1849
+
+When did king Victor Emmanuel 2nd proclamed himself as the king of united Italy:
+1861
+1871
+1848
+1862
+
+When was France defeated by Germany:
+1871
+1861
+1851
+1863
+
+When was Austria defeated by Germany:
+1866
+1855
+1844
+1874
+
+When were the Duchess of Schleswig and Holstein seized from Denmark by Germany:
+1864
+1874
+1853
+1862
+
+When was treaty of Adrianople signed between Greece and Ottoman Empire:
+1829
+1839
+1827
+1833
+
+When was Treaty of Constantinople was signed between Greece and Ottoman Empire:
+1832
+1834
+1829
+1848
+
+When did the Greek war of independence start:
+1821
+1822
+1829
+1819
+
+When was count Camillo de-Cavour made the chief minister of Italy:
+1852
+1833
+1842
+1848
+
+When did Italy defeat Austrain forces with an alliance with France:
+1859
+1855
+1869
+1888
+
+When was act of union signed between England and Scotland:
+1707
+1717
+1705
+1807
+
+When was Ireland made a part of UK through the act of union:
+1801
+1701
+1811
+1804
+
+When did WW1 start:
+1914
+1918
+1939
+1845
+
+When was Garibaldi born:
+1807
+1805
+1801
+1813
+
+When did Giribaldi meet Mazzini and joined Young Italy:
+1833
+1844
+1841
+1836
+
+Which policiy did Otto Von Bismark adopt:
+Blood and Iron
+Blood and Steel
+Bone and Iron
+Liberal Conquest
+
+When did Count Covour and Giribaldi liberate the 2 Sicilies from the spanish forces:
+1860
+1862
+1880
+1858
+
+Which place was unified by Otto Von Bismark:
+Germany
+Italy
+France
+Austria
+
+Which place was unified by Count Cavour and Garibaldi:
+Italy
+Germany
+France
+Austria
+
+Who said "Nation is a imagined political community and imagied as both inherently limited and sovereign":
+Bendict Anderson
+Josep Stalin
+Adam Smith
+Rousseou
+
+When was unifcation of Germany completed:
+1871
+1822
+1864
+1875
+
+When was unification of Italy comepled:
+1870
+1867
+1880
+1848
+
+Who painted Democrated and Social Republics in 1848:
+Frederic Sorrieu
+Vincent Van Gogh
+Michelangelo
+Rafael
+
+When did Frederic Sorrieu paint his series of pantings:
+1848
+1838
+1888
+1749
+
+Who hosted the congress of Vienna in 1815:
+Duke Matternich
+Giuseppe Mizzine
+Count Covour
+Frederic Sorrieu
+
+Where did Giuseppe Mazzini form Young Italy in 1831:
+Marseilles
+Vienna
+Hungary
+Berne
+
+Where did Giuseppe Mazzini form Young Europe in 1834:
+Berne
+Marseilles
+Vienna
+Hungary
+
+Which of the following states was dominated by the Habsburg Empire?
+Austria-Hungary
+Prussia
+Italy
+England
+
+The Balkan area inhabitants were broadly known as:
+Slavs
+Nordics
+Selts
+AngloSaxons
+
+What did the crown of oak leaves worn by Germania symbolise?
+Heroism
+Beggining of new era
+Power
+Will to Die for nation
+
+Giuseppe Garibaldi led an army of volunteers known as:
+Red Shirts
+Carbonari
+Black Shirts
+White Shirts
+
+Who formed Carbonari:
+Charcoal brothers
+Giuseppe Mizzine
+Duke Matternich
+Giuseppe Garibaldi
+
+When did the Napoleonic wars begin:
+1797
+1789
+1805
+1975
+
+Who started a revolt in Ireland against England which failed in 1798:
+Wolf Tone
+Count cavour
+Lonez Classen
+Julius Hubner
+
+Whales was part of England since:
+1565
+1655
+1567
+1562
+
+What created a tension in Europe after 1871:
+Balkan area
+Switzerland
+Only Romania
+Italy
+
+Who collected German folk songs:
+Grim brothers
+Bismark
+Garibaldi
+Duke Matternich
+
+Who was the leader of France after revolution of 1830:
+Louis Philipe
+William 1st
+Napelion Bonaparte
+Charles X
+
+Which Prussian leader refused the offer of Frankfut Parliament:
+Fedrich Welhelm
+Louise phillipe
+Napelion Bonaparte
+Charles X
+
+Which event is known as July Revoution:
+1830 revolution of France
+1719 revolution
+Russian revolution
+1848 revolution
+
+What did the olive branch around the sword symbolise on Germania:
+Willingness to make peace
+Heroism
+Power
+Will to Die for nation
+`
+                },
+                {
+                    name: "Lesson 2: Nationalism in India",
+                    data: `
+What was the main objective of the Rowlatt Act (1919)?
+To give the government extraordinary powers to suppress political activities
+To grant India complete independence
+To introduce universal adult franchise
+To abolish land revenue
+
+When did Gandhi call a nation wide hartal against the Rowlatt Act?
+6 April 1919
+5 April 1918
+5 May 1919
+6 April 1920
+
+Where did the Jallianwala Bagh incident take place?
+Amritsar
+Lahore
+Delhi
+Lucknow
+
+Who ordered the firing at Jallianwala Bagh?
+General Dyer
+Lord Irwin
+Lord Mountbatten
+General Auchinleck
+
+The Jallianwala Bagh massacre took place on:
+13 April 1919
+15 August 1919
+26 January 1920
+10 April 1918
+
+The Khilafat Movement was launched to support:
+The Ottoman Caliph
+The Mughal Emperor
+The British Crown
+The Indian Princes
+
+Which leaders were associated with the Khilafat Movement?
+Muhammad Ali and Shaukat Ali
+Jawaharlal Nehru and Patel
+Tilak and Gokhale
+Bhagat Singh and Rajguru
+
+The Non-Cooperation Movement began in:
+1920
+1919
+1922
+1930
+
+The Chauri Chaura incident occurred in:
+4th February 1922
+3rd January 1920
+4th February 1930
+12th April 1919
+
+How many policemen were killed in the Chauri Chaura incident?
+22
+19
+42
+21
+
+The Civil Disobedience Movement began with:
+The Salt March
+The Quit India Movement
+The Swadeshi Movement
+The Home Rule Movement
+
+The Salt March started from:
+Sabarmati Ashram
+Wardha Ashram
+Champaran
+Dandi
+
+The Salt March ended at:
+Dandi
+Bombay
+Delhi
+Ahmedabad
+
+The Salt March covered approximately:
+240 miles
+50 miles
+100 miles
+500 miles
+
+The Civil Disobedience Movement started in:
+March 1930
+March 1920
+March 1942
+March 1919
+
+The Civil Disobedience Movement ended in:
+March 1931
+March 1922
+March 1930
+March 1933
+
+The Gandhi-Irwin Pact was signed in:
+5 March 1931
+5 March 1930
+5 April 1922
+6 April 1942
+
+When did Gandhi launch Satyagraha for the indigo planters in Champaran?
+1917
+1918
+1927
+1930
+
+When did Gandhi launch Satyagraha for the peasants of Kheda?
+1918
+1919
+1911
+1921
+
+When did Gandhi launch the Ahmedabad Mill Strike?
+1918
+1920
+1917
+1919
+
+When was the Poona Pact signed between Gandhi and Dr. B.R. Ambedkar:
+1932
+1931
+1942
+1929
+
+When did Congress adopt the programme of Non cooperation:
+Nagpur session of December 1920
+Calcutta session of September 1920
+Madras session of December 1927
+Delhi session of October 1920
+
+When did Gandhi convince the congress to support the Khilafat Movement:
+Calcutta session of September 1920
+Nagpur session of December 1920
+Madras session of December 1927
+Delhi session of October 1920
+
+Where did the Chauri Chaura incident take place:
+Gorakhpur district of Uttar Pradesh
+Agra district of Uttar Pradesh
+Kanpur district of Madhya Pradesh
+Kolkata district of West Bengal
+
+The import of Foreign clothes halved from 1921 to 1922 and its value fell from:
+102 Crore to 57 Crore
+40 Crore to 20 Crore
+78 Crore to 39 Crore
+122 Crore to 61 Crore
+
+Alluri Sita Ram Raju was executed in:
+1924
+1922
+1923
+1919
+
+How many trusted volunteers accompanied Gandhi on the Salt March:
+78
+77
+68
+23
+
+When was Civil Disobedience Movement relaunched after the failure of Gandhi-Irwin Pact:
+January 1932
+January 1931
+January 1930
+January 1933
+
+Who wrote "Vande Mataram" in 1870s:
+Chandra Chattopadhyay
+Rabindranath Tagore
+Jawaharlal Nehru
+Ishwar Chandra Vidyasagar
+
+When did Tory government in Bratain appoint a commisiion under Sir John Simon to report on the political situation in India:
+Novermber 1927
+December 1927
+November 1928
+March 1931
+
+When did the Simon Commission arrive in India:
+3 February 1928
+3 March 1928
+3 February 1929
+3 February 1933
+
+Which session of congress passed the resolution to boycott the Simon Commission:
+Madras session of December 1927
+Calcutta session of September 1920
+Nagpur session of December 1920
+Delhi session of October 1920
+
+When did Dr Ambedkar form the Depressed Classes Association:
+1930
+1933
+1928
+1931
+
+The Rowlatt Act of 1919 allowed the British government to detain political prisoners without trial for up to how many years:
+2 Years
+3 Years
+1 Year
+5 Years
+
+When did Gandhi write the famous book 'Hind Swaraj':
+1909
+1920
+1905
+1910
+
+When did Non Cooperation Khilafat movement start:
+Janauary 1921
+March 1920
+Janauary 1920
+March 1921
+` 
+                },
+                {
+                    name: "Lesson 3: The Making of a Global World",
+                    data: `` 
+                },
+                {
+                    name: "Lesson 4: Print Culture and the Modern World",
+                    data: `
+How many copies of Guttenberg's Bible were printed in the first 3 years of its publication:
+180
+120
+100
+150
+
+When did Martin Luther write his ninety five theses:
+1517
+1520
+1527
+1537
+
+Who inroduced the first printing press in India in the mid 16th century in Goa:
+Portuguese Missionaries
+Dutch Missionaries
+Christian Missonaries
+Buddist Missonaries
+
+In what languages were the first books printed in India:
+Konkani and Kanari
+Begnali
+Marathi and Hindi
+Sanaskrit
+
+First Tamil book which was published in Cochin was published in:
+1579
+1759
+1713
+1577
+
+First Malayalam book was published in:
+1713
+1715
+1759
+1577
+
+First Indian newspaper by Gagnadar Bhattacharya was known as:
+Bengali Gazette
+Hindustan Gazette
+Hindustan Times
+Outlook
+
+When did Raja Ram Mohan Roy publish the Sambad Kaumudi:
+1821
+1830
+1819
+1822
+
+Which newsapaper was commissioned by HIndu Orthodox to counter the influence of Raja Ram Mohan Roy:
+Samachar Chandrika
+Bengali Gazette
+Hindu Samachar
+Samachar Darpan
+
+When did the British government introduce the Vernacular Press Act:
+1878
+1879
+1870
+1868
+
+First printing press was developed by Johann Gutenberg in 1430s in:
+Strasbourg, Germany
+Koln, Germany
+Wurzburg, Germany
+Paris, France
+
+When did Kashibaba, a Kanpur mill worker publish his book "Chhote Aur Bade Ka Sawal":
+1938
+1933
+1983
+1865
+
+When was quit India Movement launched by Gandhi:
+8 August 1942
+6 August 1942
+12 March 1945
+8 August 1941
+
+How many copies of Martin Luthers translation of the "New Testament" were sold in the first few weeks:
+5000
+10000
+1000
+2700
+
+When did Guttenberg perfect his printing press:
+1448
+1450
+1438
+1446
+
+When was print introduced in Europe by Marco Polo:
+1295
+1299
+1275
+1288
+
+When did Rashsundari Debi publish her autobiography "Aamar Jiban":
+1876
+1833
+1873
+1869
+
+What was the name of the book in which Ram Chadda taught women how to be obedient wives:
+Istri Dharm Vichar
+Kul Dharm Vichar
+Gulamgiri
+Kesari
+
+When did Jyotiba Phule, the pioneer of low caste protests publish his book "Gulamgiri":
+1871
+1847
+1899
+1873
+
+Who wrote Kesari:
+Bal Gangadhar Tilak
+Ram Chadda
+Raja Ram Mohan Roy
+Lala Lajpat Rai
+
+The Grimm Brothers  in Germany collected and published folk tales, they were finally published in:
+1812
+1815
+1809
+1818
+
+Why did Warren Hastings persecute James Augustus Hicky, the editor of the first Indian newspaper "Bengali Gazette":
+Because he published a lot of gossip about company officials and 
+Becuase he planned a conspiracy against the Governer General
+Becuase he was great friends with Hastings
+Becuase he wanted to flee India
+
+What was the name of a Gujrati Newspaper from 1822:
+Gujrat Samachar
+Bombay Samachar
+Madras Samachar
+Culcutta Samachar
+
+When was The Hindu newspaper made:
+1878
+1838
+1888
+1898
+
+From ___ onwards, books in China were printed by rubbing paper (woodblock printing):
+594
+599
+584
+693
+
+When was Vernecular Press Act repealed by Lord Ripon in:
+1882
+1887
+1839
+1877
+
+From which country did Buddhist missionaries introduce hand-printing technology into Japan around 768-770 AD:
+China
+Korea
+India
+Iran
+
+Published in 868 AD, what is the name of the oldest dated printed book found in Japan?
+Diamond Sutra
+Ukiyo-e
+Tripitaka
+Amar Jiban
+
+When was Kitagawa Utamaro born:
+1753
+1788
+1752
+1722
+
+What was the name of Kitagawas art form:
+Ukiyo-e
+Diamond Sutra
+Tripitaka
+Amar Jiban
+` 
+                },
+                {
+                    name: "Lesson 5: Post Independence Era: J & K",
+                    data: `` 
+                }
+            ]
+        },
+        geography: {
+            icon: "🌍",
+            title: "Geography",
+            lessons: [
+                { name: "Lesson 1: Resources and Development", data: `` },
+                { name: "Lesson 2: Forest and Wildlife Resources", data: `` },
+                { name: "Lesson 3: Water Resources", data: `` },
+                { name: "Lesson 4: Agriculture", data: `` },
+                { name: "Lesson 5: Minerals and Energy Resources", data: `` }
+            ]
+        },
+        civics: {
+            icon: "🏛️",
+            title: "Civics",
+            lessons: [
+                { name: "Lesson 1: Power Sharing", data: `` },
+                { name: "Lesson 2: Federalism", data: `` },
+                { name: "Lesson 3: Gender, Religion and Caste", data: `` },
+                { name: "Lesson 4: Political Parties", data: `` },
+                { name: "Lesson 5: Outcomes of Democracy", data: `` },
+                { name: "Lesson 6: Challenges to Democracy", data: `` }
+            ]
+        },
+        economics: {
+            icon: "💰",
+            title: "Economics, DM, RSE",
+            lessons: [
+                { name: "Lesson 1: Development", data: `` },
+                { name: "Lesson 2: Sectors of the Indian Economy", data: `` },
+                { name: "Disaster Management", data: `` },
+                { name: "Road Safety", data: `` }
+            ]
+        }
+    };
+
+    // =====================================================================
+    // APPLICATION LOGIC
+    // =====================================================================
+
+    let currentQuizSource = "";
+    let globalParsedBank = [];
+    let activeQuizBank = [];
+    let retryBank = []; // Tracks questions missed or skipped
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let currentScreen = "home"; 
+
+    // Initialize Home Screen
+    function init() {
+        const subjectScreen = document.getElementById('subjectScreen');
+        subjectScreen.innerHTML = '';
+        
+        for (const [key, subject] of Object.entries(quizDatabases)) {
+            const card = document.createElement('div');
+            card.className = 'subject-card';
+            card.onclick = () => showLessons(key);
+            card.innerHTML = `
+                <div class="subject-icon">${subject.icon}</div>
+                <div class="subject-title">${subject.title}</div>
+            `;
+            subjectScreen.appendChild(card);
+        }
+        navigate("home");
+    }
+
+    function showLessons(subjectKey) {
+        const subject = quizDatabases[subjectKey];
+        const lessonScreen = document.getElementById('lessonScreen');
+        document.getElementById('mainTitle').innerText = `${subject.icon} ${subject.title}`;
+        lessonScreen.innerHTML = '';
+
+        subject.lessons.forEach((lesson, index) => {
+            const hasData = lesson.data.trim().length > 0;
+            const btn = document.createElement('button');
+            btn.className = 'lesson-btn';
+            btn.disabled = !hasData;
+            
+            btn.innerHTML = `
+                <span>${lesson.name}</span>
+                <span class="badge ${hasData ? '' : 'empty'}">${hasData ? 'Ready' : 'No Data'}</span>
+            `;
+
+            if (hasData) {
+                btn.onclick = () => prepareSetupScreen(lesson.data, lesson.name);
+            }
+            lessonScreen.appendChild(btn);
+        });
+
+        navigate("lessons");
+    }
+
+    function prepareSetupScreen(rawTextData, title) {
+        document.getElementById('mainTitle').innerText = "Quiz Setup";
+        document.getElementById('setupLessonTitle').innerText = title;
+        currentQuizSource = rawTextData;
+        
+        if(parseData()) {
+            navigate("setup");
+        }
+    }
+
+    function parseData() {
+        const blocks = currentQuizSource.trim().split(/\r?\n\s*\r?\n/);
+        globalParsedBank = [];
+
+        blocks.forEach(block => {
+            const lines = block.split(/\r?\n/).map(line => line.trim()).filter(line => line.length > 0);
+            if (lines.length < 2) return;
+            const question = lines[0];
+            const correctAnswer = lines[1];
+            
+            let options = [...lines.slice(1)];
+            for (let i = options.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [options[i], options[j]] = [options[j], options[i]];
+            }
+            globalParsedBank.push({ question, options, correctAnswer });
+        });
+
+        const totalQuestions = globalParsedBank.length;
+        if (totalQuestions === 0) {
+            alert("No valid questions parsed from this layout! Ensure there are no extra blank lines between options.");
+            return false;
+        }
+
+        document.getElementById('totalFoundText').innerText = `Total questions available: ${totalQuestions}`;
+
+        const divisors = [10, 4, 2, 1];
+        let structuralOptions = []; 
+        divisors.forEach(div => {
+            let val = Math.floor(totalQuestions / div);
+            if (val > 0) structuralOptions.push(val);
+        });
+
+        let uniqueOptions = [...new Set(structuralOptions)].sort((a, b) => a - b);
+        const selectDropdown = document.getElementById('quantitySelect');
+        selectDropdown.innerHTML = '';
+        
+        uniqueOptions.forEach(count => {
+            let labelText = (count === totalQuestions) ? `All (${count} Questions)` : `${count} Questions`;
+            let optElem = document.createElement('option');
+            optElem.value = count;
+            optElem.innerText = labelText;
+            selectDropdown.appendChild(optElem);
+        });
+        
+        selectDropdown.value = totalQuestions;
+        return true;
+    }
+
+    function startQuizGameplay() {
+        const selectedCount = parseInt(document.getElementById('quantitySelect').value);
+        
+        let tempBank = [...globalParsedBank];
+        for (let i = tempBank.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [tempBank[i], tempBank[j]] = [tempBank[j], tempBank[i]];
+        }
+        activeQuizBank = tempBank.slice(0, selectedCount);
+
+        currentQuestionIndex = 0;
+        score = 0;
+        retryBank = []; // Reset retry bank on fresh run
+        navigate("quiz");
+        showQuestion();
+    }
+
+    // New start function purely for retrying mistakes/skips
+    function startRetryGameplay() {
+        activeQuizBank = [...retryBank]; // Replace active questions with the ones we got wrong
+        currentQuestionIndex = 0;
+        score = 0;
+        retryBank = []; // Reset the retry bank for THIS attempt
+        navigate("quiz");
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const container = document.getElementById('dynamicQuestionBox');
+        const item = activeQuizBank[currentQuestionIndex];
+        
+        document.getElementById('statusText').innerText = `Question ${currentQuestionIndex + 1} of ${activeQuizBank.length}`;
+        const progressPercent = (currentQuestionIndex / activeQuizBank.length) * 100;
+        document.getElementById('progressFill').style.width = `${progressPercent}%`;
+        
+        const nextBtn = document.getElementById('nextBtn');
+        nextBtn.disabled = true;
+        document.getElementById('skipBtn').disabled = false;
+        nextBtn.innerText = (currentQuestionIndex === activeQuizBank.length - 1) ? "Finish Quiz" : "Next Question";
+
+        let optionsHTML = '';
+        item.options.forEach((opt, oIdx) => {
+            optionsHTML += `
+                <label class="option-label">
+                    <input type="radio" name="current_opts" value="${opt.replace(/"/g, '&quot;')}" onclick="checkAnswer(this)">
+                    <span>${opt}</span>
+                </label>
+            `;
+        });
+
+        container.innerHTML = `
+            <div>
+                <div class="question-text">${item.question}</div>
+                <div class="options-container" id="optionsGroup">${optionsHTML}</div>
+            </div>
+        `;
+    }
+
+    function checkAnswer(selectedRadio) {
+        document.getElementById('skipBtn').disabled = true;
+        const item = activeQuizBank[currentQuestionIndex];
+        const optionsGroup = document.getElementById('optionsGroup');
+        const labels = optionsGroup.getElementsByClassName('option-label');
+
+        optionsGroup.classList.add('disable-click');
+
+        for (let label of labels) {
+            const radioInput = label.querySelector('input');
+            if (radioInput.value === item.correctAnswer) {
+                label.classList.add('correct-ans');
+            } else if (radioInput.checked) {
+                label.classList.add('wrong-ans');
+            }
+        }
+
+        if (selectedRadio.value === item.correctAnswer) {
+            score++;
+        } else {
+            retryBank.push(item); // They got it wrong, add to retry bank
+        }
+
+        document.getElementById('nextBtn').disabled = false;
+    }
+
+    function skipQuestion() {
+        const optionsGroup = document.getElementById('optionsGroup');
+        if (optionsGroup && optionsGroup.classList.contains('disable-click')) return;
+
+        // They skipped it, so add to retry bank and move on
+        retryBank.push(activeQuizBank[currentQuestionIndex]);
+        
+        if (currentQuestionIndex < activeQuizBank.length - 1) {
+            currentQuestionIndex++;
+            showQuestion();
+        } else {
+            finishQuiz();
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < activeQuizBank.length - 1) {
+            currentQuestionIndex++;
+            showQuestion();
+        } else {
+            finishQuiz();
+        }
+    }
+
+    function finishQuiz() {
+        document.getElementById('progressFill').style.width = '100%';
+        const resBox = document.getElementById('resultBox');
+        
+        const percentage = Math.round((score / activeQuizBank.length) * 100);
+        
+        // Generate the Retry Button if they missed or skipped anything
+        let retryButtonHTML = '';
+        if(retryBank.length > 0) {
+            retryButtonHTML = `
+                <button class="btn-main" style="background: var(--warning); margin-bottom: 15px;" onclick="startRetryGameplay()">
+                    🔄 Retry Incorrect/Skipped (${retryBank.length})
+                </button>
+            `;
+        }
+
+        resBox.innerHTML = `
+            <h2>🎉 Quiz Completed!</h2>
+            <h3>Your Final Score: ${score} / ${activeQuizBank.length} (${percentage}%)</h3>
+            ${retryButtonHTML}
+            <button class="btn-main" style="background: var(--text-muted);" onclick="init()">🔙 Back to Main Menu</button>
+        `;
+        navigate("results");
+    }
+
+    // Easy Screen Management
+    function navigate(screen) {
+        currentScreen = screen;
+        document.getElementById('subjectScreen').style.display = screen === 'home' ? 'grid' : 'none';
+        document.getElementById('lessonScreen').style.display = screen === 'lessons' ? 'flex' : 'none';
+        document.getElementById('setupScreen').style.display = screen === 'setup' ? 'block' : 'none';
+        document.getElementById('quizApp').style.display = screen === 'quiz' ? 'block' : 'none';
+        document.getElementById('resultBox').style.display = screen === 'results' ? 'block' : 'none';
+
+        // Manage Header Back Button & Titles
+        const backBtn = document.getElementById('backBtn');
+        if (screen === 'home') {
+            backBtn.style.display = 'none';
+            document.getElementById('mainTitle').innerText = "SST MCQ Test";
+        } else if (screen === 'lessons') {
+            backBtn.style.display = 'block';
+        } else if (screen === 'setup') {
+            backBtn.style.display = 'block';
+        } else {
+            backBtn.style.display = 'none';
+        }
+    }
+
+            // Initialize the audio context
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(isCorrect) {
+            // Browsers require audio context to be resumed after user interaction
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            const now = audioCtx.currentTime;
+            
+            if (isCorrect) {
+                // Correct Sound: A low, soft, pleasant chime (Sine wave)
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(400, now); 
+                oscillator.frequency.exponentialRampToValueAtTime(600, now + 0.1); 
+                
+                // Volume envelope (low volume: 0.1)
+                gainNode.gain.setValueAtTime(0, now);
+                gainNode.gain.linearRampToValueAtTime(0.1, now + 0.05);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+                
+                oscillator.start(now);
+                oscillator.stop(now + 0.5);
+            } else {
+                // Wrong Sound: A dull, descending sound (Triangle wave)
+                oscillator.type = 'triangle';
+                oscillator.frequency.setValueAtTime(250, now);
+                oscillator.frequency.exponentialRampToValueAtTime(150, now + 0.2); 
+                
+                // Volume envelope (low volume: 0.1)
+                gainNode.gain.setValueAtTime(0, now);
+                gainNode.gain.linearRampToValueAtTime(0.1, now + 0.05);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                
+                oscillator.start(now);
+                oscillator.stop(now + 0.4);
+            }
+        }
+
+    function goBack() {
+        if (currentScreen === 'lessons') init();
+        else if (currentScreen === 'setup') document.getElementById('backBtn').onclick = () => init(); 
+        init(); // Default fallback
+    }
+
+    // Run on boot
+    init();
+
+</script>
+</body>
+</html>
