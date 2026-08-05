@@ -1,2 +1,2 @@
 # 10th-MCQ-Test
-Sharpen your 10th history knowladge.
+Sharpen your 10th class knowladge.
