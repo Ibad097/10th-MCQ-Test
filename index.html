@@ -1212,263 +1212,827 @@ Amar Jiban
         }
     };
 
-    // State Navigation Stack
-    let navHistory = [{ screen: 'portalScreen', title: 'Class 10 Learning Portal' }];
-    let currentCategoryKey = null;
-    let currentSubjectKey = null;
-    let currentLesson = null;
-    let parsedQuestions = [];
-    let currentQuizQueue = [];
-    let currentIndex = 0;
-    let score = 0;
-    let answered = false;
+// STATE VARIABLES
+// ==========================================
 
-    // Navigation Stack Logic
-    function pushNavigation(screenId, title) {
-        navHistory.push({ screen: screenId, title: title });
+let navHistory = [
+    { screen: "portalScreen", title: "Class-10 MCQ Practice:" }
+];
+
+let currentCategoryKey = null;
+let currentSubjectKey = null;
+let currentLesson = null;
+
+let parsedQuestions = [];
+let currentQuizQueue = [];
+
+let currentIndex = 0;
+let score = 0;
+let answered = false;
+
+let wrongQuestions = [];
+
+// ==========================================
+// NAVIGATION
+// ==========================================
+
+function pushNavigation(screenId, title){
+
+    navHistory.push({
+        screen: screenId,
+        title: title
+    });
+
+    renderState();
+}
+
+function popNavigation(){
+
+    if(navHistory.length > 1){
+
+        navHistory.pop();
         renderState();
+
+    }
+}
+
+function renderState(){
+
+    const current =
+    navHistory[navHistory.length-1];
+
+    [
+        "portalScreen",
+        "subjectScreen",
+        "lessonScreen",
+        "setupScreen",
+        "quizApp",
+        "resultBox"
+
+    ].forEach(id=>{
+
+        const el=document.getElementById(id);
+
+        if(el)
+            el.style.display="none";
+
+    });
+
+    const active =
+    document.getElementById(current.screen);
+
+    if(active){
+
+        if(
+            current.screen==="portalScreen" ||
+            current.screen==="subjectScreen"
+        )
+            active.style.display="grid";
+
+        else if(
+            current.screen==="lessonScreen"
+        )
+            active.style.display="flex";
+
+        else
+            active.style.display="block";
     }
 
-    function popNavigation() {
-        if (navHistory.length > 1) {
-            navHistory.pop();
-            renderState();
-        }
-    }
+    document.getElementById("mainTitle")
+    .innerText=current.title;
 
-    function renderState() {
-        const currentState = navHistory[navHistory.length - 1];
-        
-        // Hide all screens
-        ['portalScreen', 'subjectScreen', 'lessonScreen', 'setupScreen', 'quizApp', 'resultBox'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.style.display = 'none';
-        });
+    document.getElementById("globalBackBtn")
+    .style.display =
+    navHistory.length>1
+    ? "inline-block"
+    : "none";
 
-        // Show active screen
-        const active = document.getElementById(currentState.screen);
-        if (active) {
-            if (currentState.screen === 'portalScreen' || currentState.screen === 'subjectScreen') {
-                active.style.display = 'grid';
-            } else if (currentState.screen === 'lessonScreen') {
-                active.style.display = 'flex';
-            } else {
-                active.style.display = 'block';
-            }
-        }
+}
+// ==========================================
+// OPEN CATEGORY
+// ==========================================
 
-        // Title and Back Button state
-        document.getElementById('mainTitle').innerText = currentState.title;
-        const backBtn = document.getElementById('globalBackBtn');
-        backBtn.style.display = navHistory.length > 1 ? 'inline-block' : 'none';
-    }
+function openCategory(catKey){
 
-    function openCategory(catKey) {
-        currentCategoryKey = catKey;
-        const cat = masterDatabase[catKey];
-        const grid = document.getElementById('subjectScreen');
-        grid.innerHTML = '';
+    currentCategoryKey=catKey;
 
-        for (const [subKey, subObj] of Object.entries(cat.subjects)) {
-            const card = document.createElement('div');
-            card.className = 'subject-card';
-            card.onclick = () => openSubject(subKey);
-            card.innerHTML = `
-                <div class="subject-icon">${subObj.icon}</div>
-                <div class="subject-title">${subObj.title}</div>
-            `;
-            grid.appendChild(card);
-        }
+    const cat =
+    masterDatabase[catKey];
 
-        pushNavigation('subjectScreen', cat.title);
-    }
+    const grid =
+    document.getElementById("subjectScreen");
 
-    function openSubject(subKey) {
-        currentSubjectKey = subKey;
-        const subObj = masterDatabase[currentCategoryKey].subjects[subKey];
-        const list = document.getElementById('lessonScreen');
-        list.innerHTML = '';
 
-        if (!subObj.lessons || subObj.lessons.length === 0) {
-            list.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--text-muted); font-weight:600;">No lessons available yet in this category.</div>`;
-        } else {
-            subObj.lessons.forEach(lesson => {
-                const qCount = parseRawData(lesson.data).length;
-                const btn = document.createElement('button');
-                btn.className = 'lesson-btn';
-                btn.disabled = qCount === 0;
-                btn.onclick = () => openSetup(lesson);
-                btn.innerHTML = `
-                    <span>${lesson.name}</span>
-                    <span class="badge ${qCount === 0 ? 'empty' : ''}">${qCount} Qs</span>
-                `;
-                list.appendChild(btn);
+    grid.innerHTML="";
+
+    Object.entries(cat.subjects)
+    .forEach(([key,obj])=>{
+        const card =
+        document.createElement("div");
+
+        card.className="subject-card";
+
+        card.onclick =
+        ()=>openSubject(key);
+
+
+        card.innerHTML=`
+
+        <div class="subject-icon">
+        ${obj.icon}
+        </div>
+
+        <div class="subject-title">
+        ${obj.title}
+        </div>
+
+        `;
+
+        grid.appendChild(card);
+    });
+
+    pushNavigation(
+        "subjectScreen",
+        cat.title
+    );
+}
+// ==========================================
+// OPEN SUBJECT
+// ==========================================
+
+function openSubject(subKey){
+
+    currentSubjectKey=subKey;
+
+    const subject =
+    masterDatabase[currentCategoryKey]
+    .subjects[subKey];
+
+    const list =
+    document.getElementById("lessonScreen");
+
+    list.innerHTML="";
+
+    subject.lessons.forEach(lesson=>{
+
+
+        const count =
+        parseRawData(lesson.data).length;
+
+
+        const btn =
+        document.createElement("button");
+
+        btn.className="lesson-btn";
+
+        btn.disabled=count===0;
+
+        btn.onclick=
+        ()=>openSetup(lesson);
+
+
+        btn.innerHTML=`
+
+        <span>${lesson.name}</span>
+
+        <span class="badge ${
+        count===0?"empty":""
+        }">
+
+        ${count} Qs
+
+        </span>
+
+        `;
+
+        list.appendChild(btn);
+
+    });
+
+    pushNavigation(
+        "lessonScreen",
+        subject.title
+    );
+
+}
+// ==========================================
+// QUIZ SETUP
+// ==========================================
+
+function openSetup(lesson){
+
+    currentLesson=lesson;
+
+    parsedQuestions =
+    parseRawData(lesson.data);
+
+
+    document.getElementById(
+        "setupLessonTitle"
+    ).innerText=lesson.name;
+
+    document.getElementById(
+        "totalFoundText"
+    ).innerText=
+    `Total questions available: ${parsedQuestions.length}`;
+
+    const select =
+    document.getElementById(
+        "quantitySelect"
+    );
+
+    select.innerHTML="";
+
+    [
+        5,10,15,20,25,30,40,50
+    ]
+    .filter(x=>x<=parsedQuestions.length)
+    .concat(
+        parsedQuestions.length
+    )
+    .filter((v,i,a)=>a.indexOf(v)===i)
+    .forEach(num=>{
+
+
+        let opt =
+        document.createElement("option");
+
+
+        opt.value=num;
+
+
+        opt.innerText =
+        num===parsedQuestions.length
+        ?
+        `All Questions (${num})`
+        :
+        `${num} Questions`;
+
+
+        select.appendChild(opt);
+
+    });
+    pushNavigation(
+        "setupScreen",
+        "Quiz Setup"
+    );
+
+}
+// ==========================================
+// PARSER
+// ==========================================
+
+function parseRawData(rawText){
+
+    if(!rawText.trim())
+        return [];
+
+    const blocks =
+    rawText.trim()
+    .split(/\n\s*\n/);
+
+
+    let questions=[];
+
+
+    blocks.forEach(block=>{
+
+        const lines =
+        block.split("\n")
+        .map(x=>x.trim())
+        .filter(x=>x);
+
+
+        if(lines.length>=5){
+
+            questions.push({
+
+                question:lines[0],
+
+                answer:lines[1],
+
+                options:
+                lines.slice(1,5)
+
             });
         }
+    });
 
-        pushNavigation('lessonScreen', subObj.title);
+
+    return questions;
+
+}
+// ==========================================
+// START QUIZ
+// ==========================================
+
+function startQuizGameplay(){
+
+    let count =
+    parseInt(
+        document.getElementById(
+            "quantitySelect"
+        ).value
+    );
+
+    currentQuizQueue =
+    [...parsedQuestions]
+    .sort(()=>Math.random()-0.5)
+    .slice(0,count);
+
+    currentIndex=0;
+    score=0;
+    wrongQuestions=[];
+
+
+    pushNavigation(
+        "quizApp",
+        currentLesson.name
+    );
+    renderQuestion();
+
+}
+// ==========================================
+// RENDER QUESTION
+// ==========================================
+function renderQuestion(){
+
+    answered=false;
+
+    const q =
+    currentQuizQueue[currentIndex];
+
+    const progress =
+    ((currentIndex + 1) / currentQuizQueue.length) * 100;
+
+    document.getElementById("progressFill")
+    .style.width=`${progress}%`;
+
+    document.getElementById("statusText")
+    .innerText=
+    `Question ${currentIndex+1} of ${currentQuizQueue.length}`;
+
+    const options =
+    [...q.options]
+    .sort(()=>Math.random()-0.5);
+
+    document.getElementById(
+        "dynamicQuestionBox"
+    ).innerHTML=`
+
+    <div class="question-text">
+
+    ${currentIndex+1}. ${q.question}
+
+    </div>
+
+    <div class="options-container">
+
+    ${
+        options.map(opt=>`
+
+        <label class="option-label">
+
+        <input 
+        type="radio"
+        name="quizOpt"
+        value="${escapeHtml(opt)}"
+        onchange="selectOption(this,'${escapeHtml(q.answer)}')">
+
+        <span>
+        ${escapeHtml(opt)}
+        </span>
+
+        </label>
+
+        `).join("")
     }
 
-    function openSetup(lesson) {
-        currentLesson = lesson;
-        parsedQuestions = parseRawData(lesson.data);
-        
-        document.getElementById('setupLessonTitle').innerText = lesson.name;
-        document.getElementById('totalFoundText').innerText = `Total questions available: ${parsedQuestions.length}`;
+    </div>
 
-        const select = document.getElementById('quantitySelect');
-        select.innerHTML = '';
+    `;
+    document.getElementById("nextBtn")
+    .disabled=true;
 
-        const counts = [5, 10, 15, 20, 25, 30, 40, 50].filter(c => c <= parsedQuestions.length);
-        if (!counts.includes(parsedQuestions.length) && parsedQuestions.length > 0) {
-            counts.push(parsedQuestions.length);
+    const nextBtn =
+    document.getElementById("nextBtn");
+
+
+    if(currentIndex === currentQuizQueue.length - 1){
+
+        nextBtn.innerText = "Finish Test";
+
+    }
+    else{
+
+        nextBtn.innerText = "Next Question";
+
+    }
+    document.getElementById("skipBtn")
+    .disabled=false;
+}
+
+function escapeHtml(str){
+
+    return str
+    .replace(/'/g,"&apos;")
+    .replace(/"/g,"&quot;");
+
+}
+// ==========================================
+// ANSWER CHECK
+// ==========================================
+
+function selectOption(inputEl,correctAnswer){
+
+    if(answered)
+        return;
+    answered=true;
+
+    let selected =
+    inputEl.value;
+
+    const labels =
+    document.querySelectorAll(
+        ".option-label"
+    );
+
+    labels.forEach(label=>{
+
+        label.classList.add(
+            "disable-click"
+        );
+
+        const radio =
+        label.querySelector("input");
+
+
+        if(radio.value===correctAnswer){
+
+            label.classList.add(
+                "correct-ans"
+            );
+
         }
 
-        counts.forEach(c => {
-            const opt = document.createElement('option');
-            opt.value = c;
-            opt.innerText = c === parsedQuestions.length ? `All Questions (${c})` : `${c} Questions`;
-            select.appendChild(opt);
-        });
+    });
 
-        pushNavigation('setupScreen', 'Quiz Setup');
+    if(selected===correctAnswer){
+        score++;
+        playAnswerSound(true);
+    }
+    else{
+
+        inputEl
+        .closest(".option-label")
+        .classList.add(
+            "wrong-ans"
+        );
+
+        const wrong =
+        currentQuizQueue[currentIndex];
+
+        if(!wrongQuestions.includes(wrong)){
+
+            wrongQuestions.push(wrong);
+
+        }
+        playAnswerSound(false);
     }
 
-    // Question Parser Utility
-    function parseRawData(rawText) {
-        if (!rawText || !rawText.trim()) return [];
-        const blocks = rawText.trim().split(/\n\s*\n/);
-        const questions = [];
+    document.getElementById(
+        "nextBtn"
+    ).disabled=false;
 
-        blocks.forEach(block => {
-            const lines = block.trim().split('\n').map(l => l.trim()).filter(l => l.length > 0);
-            if (lines.length >= 5) {
-                const qText = lines[0];
-                const correctAns = lines[1]; // First line following question is the correct answer
-                const allOpts = lines.slice(1, 5);
-                
-                questions.push({
-                    question: qText,
-                    answer: correctAns,
-                    options: allOpts
-                });
-            }
-        });
+    document.getElementById(
+        "skipBtn"
+    ).disabled=true;
 
-        return questions;
-    }
+}
+// ==========================================
+// NEXT / SKIP
+// ==========================================
+function nextQuestion(){
 
-    // Quiz Execution
-    function startQuizGameplay() {
-        const select = document.getElementById('quantitySelect');
-        const count = parseInt(select.value) || parsedQuestions.length;
+    if(currentIndex <
+       currentQuizQueue.length-1){
 
-        // Shuffle questions
-        currentQuizQueue = [...parsedQuestions].sort(() => Math.random() - 0.5).slice(0, count);
-        currentIndex = 0;
-        score = 0;
+        currentIndex++;
 
-        pushNavigation('quizApp', currentLesson.name);
         renderQuestion();
+
     }
+    else{
 
-    function renderQuestion() {
-        answered = false;
-        const q = currentQuizQueue[currentIndex];
-        
-        // Progress Bar & Status
-        const progress = ((currentIndex) / currentQuizQueue.length) * 100;
-        document.getElementById('progressFill').style.width = `${progress}%`;
-        document.getElementById('statusText').innerText = `Question ${currentIndex + 1} of ${currentQuizQueue.length}`;
-
-        // Shuffle options for display
-        const shuffledOpts = [...q.options].sort(() => Math.random() - 0.5);
-
-        const container = document.getElementById('dynamicQuestionBox');
-        container.innerHTML = `
-            <div class="question-text">${currentIndex + 1}. ${q.question}</div>
-            <div class="options-container" id="optionsGroup">
-                ${shuffledOpts.map((opt, i) => `
-                    <label class="option-label" id="optLabel_${i}">
-                        <input type="radio" name="quizOpt" value="${escapeHtml(opt)}" onchange="selectOption(this, '${escapeHtml(q.answer)}')">
-                        <span>${escapeHtml(opt)}</span>
-                    </label>
-                `).join('')}
-            </div>
-        `;
-
-        document.getElementById('nextBtn').disabled = true;
-        document.getElementById('skipBtn').disabled = false;
+        showResults();
     }
+}
+function skipQuestion(){
 
-    function escapeHtml(str) {
-        return str.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-    }
+    if(!answered){
 
-    function selectOption(inputEl, correctAnswer) {
-        if (answered) return;
-        answered = true;
+        const skipped =
+        currentQuizQueue[currentIndex];
 
-        const selectedVal = inputEl.value;
-        const labels = document.querySelectorAll('.option-label');
-        
-        labels.forEach(lbl => {
-            lbl.classList.add('disable-click');
-            const inp = lbl.querySelector('input');
-            if (inp.value === correctAnswer) {
-                lbl.classList.add('correct-ans');
-            }
-        });
 
-        if (selectedVal === correctAnswer) {
-            score++;
-        } else {
-            inputEl.closest('.option-label').classList.add('wrong-ans');
+        if(!wrongQuestions.includes(skipped)){
+
+            wrongQuestions.push(skipped);
+
         }
-
-        document.getElementById('nextBtn').disabled = false;
-        document.getElementById('skipBtn').disabled = true;
-    }
-
-    function nextQuestion() {
-        if (currentIndex < currentQuizQueue.length - 1) {
-            currentIndex++;
-            renderQuestion();
-        } else {
-            showResults();
-        }
-    }
-
-    function skipQuestion() {
-        if (answered) return;
         nextQuestion();
+
+    }
+}
+// ==========================================
+// RETRY WRONG QUESTIONS
+// ==========================================
+function retryWrongQuestions(){
+
+    document.getElementById("progressFill").style.width="0%";
+    currentQuizQueue =
+    [...wrongQuestions];
+
+    currentIndex=0;
+
+    score=0;
+
+    // Clear old mistakes.
+    // New mistakes will be collected.
+    wrongQuestions=[];
+
+
+    pushNavigation(
+        "quizApp",
+        "Retry Wrong Questions"
+    );
+    renderQuestion();
+
+}
+// ==========================================
+// RESULTS
+// ==========================================
+
+function showResults(){
+
+    const box =
+    document.getElementById(
+        "resultBox"
+    );
+
+    if(wrongQuestions.length===0){
+        box.innerHTML=`
+
+        <div style="font-size:4em">
+        🏆
+        </div>
+
+        <h2>
+        Perfect Score!
+        </h2>
+
+        <h3>
+        You mastered all questions!
+        </h3>
+
+        <button class="btn-main"
+        onclick="exitToHome()">
+
+        🏠 Home
+
+        </button>
+
+        `;
     }
 
-    function showResults() {
-        const pct = Math.round((score / currentQuizQueue.length) * 100);
-        const box = document.getElementById('resultBox');
-        
-        let emoji = "🎉";
-        if (pct < 50) emoji = "📚";
-        else if (pct < 80) emoji = "👍";
+    else{
 
-        box.innerHTML = `
-            <div style="font-size: 4em; margin-bottom: 10px;">${emoji}</div>
-            <h2>Quiz Completed!</h2>
-            <h3>Your Score: ${score} / ${currentQuizQueue.length} (${pct}%)</h3>
-            <button class="btn-main" onclick="exitToHome()">Return to Home</button>
+        const percent =
+        Math.round(
+        (score/currentQuizQueue.length)*100
+        );
+
+        box.innerHTML=`
+
+        <div style="font-size:4em">
+        📚
+        </div>
+        <h2>
+        Quiz Completed!
+        </h2>
+        <h3>
+        Score:
+        ${score}/${currentQuizQueue.length}
+        (${percent}%)
+        </h3>
+
+        <p style="
+        color:#64748b;
+        font-weight:700;
+        margin-bottom:20px;">
+
+        ${wrongQuestions.length}
+        ${wrongQuestions.length === 1 ? "question was" : "questions were"}
+        wrong. Click to retry
+
+        </p>
+
+        <button class="btn-main"
+        style="
+        background:#ef4444;
+        margin-bottom:15px;"
+        onclick="retryWrongQuestions()">
+
+
+        🔁 Retry Wrong Questions
+        (${wrongQuestions.length})
+        </button>
+
+        <button class="btn-main"
+        onclick="exitToHome()">
+
+        🏠 Home
+
+        </button>
+
         `;
 
-        pushNavigation('resultBox', 'Quiz Result');
     }
+// Remove quiz screens from history
+navHistory = navHistory.filter(
+    item =>
+    item.screen !== "quizApp" &&
+    item.screen !== "setupScreen" &&
+    item.screen !== "resultBox"
+);
 
-    function exitToHome() {
-        navHistory = [{ screen: 'portalScreen', title: 'Class 10 Learning Portal' }];
-        renderState();
-    }
+// Go back to lessons
+navHistory.push({
+    screen: "resultBox",
+    title: "Quiz Result"
+});
+renderState();
+}
+// ==========================================
+// HOME BUTTON
+// ==========================================
 
-    // Initialize initial state
+function exitToHome(){
+
+    navHistory=[
+        {
+        screen:"portalScreen",
+        title:"Class-10 MCQ Practice:"
+        }
+    ];
     renderState();
+
+}
+
+// ==========================================
+// AUDIO SYSTEM
+// ==========================================
+
+let audioCtx=null;
+
+function playAnswerSound(isCorrect){
+
+
+    if(!audioCtx){
+
+        audioCtx =
+        new(
+        window.AudioContext ||
+        window.webkitAudioContext
+        );
+    }
+
+    if(audioCtx.state==="suspended")
+        audioCtx.resume();
+
+    const now =
+    audioCtx.currentTime;
+
+    const osc1 =
+    audioCtx.createOscillator();
+
+    const osc2 =
+    audioCtx.createOscillator();
+
+    const gain =
+    audioCtx.createGain();
+
+
+
+    if(isCorrect){
+        osc1.type="sine";
+        osc2.type="triangle";
+        osc1.frequency
+
+        .setValueAtTime(500,now);
+        osc1.frequency
+        .exponentialRampToValueAtTime(
+            900,
+            now+0.12
+        );
+
+        osc2.frequency
+        .setValueAtTime(750,now);
+
+        osc2.frequency
+        .exponentialRampToValueAtTime(
+            1200,
+            now+0.12
+        );
+
+        gain.gain
+        .setValueAtTime(
+            0,
+            now
+        );
+
+        gain.gain
+        .linearRampToValueAtTime(
+            0.15,
+            now+0.02
+        );
+    }
+
+    else{
+
+
+        osc1.type="sine";
+        osc2.type="square";
+
+
+        osc1.frequency
+        .setValueAtTime(
+            200,
+            now
+        );
+
+
+        osc1.frequency
+        .exponentialRampToValueAtTime(
+            300,
+            now+0.10
+        );
+
+
+        osc2.frequency
+        .setValueAtTime(
+            500,
+            now
+        );
+
+
+        osc2.frequency
+        .exponentialRampToValueAtTime(
+            200,
+            now+0.10
+        );
+
+
+
+        gain.gain
+        .setValueAtTime(
+            0,
+            now
+        );
+
+
+        gain.gain
+        .linearRampToValueAtTime(
+            0.07,
+            now+0.01
+        );
+
+
+    }
+
+    gain.gain
+    .exponentialRampToValueAtTime(
+        0.0001,
+        now+0.3
+    );
+
+    osc1.connect(gain);
+    osc2.connect(gain);
+
+    gain.connect(
+        audioCtx.destination
+    );
+
+    osc1.start(now);
+    osc2.start(now);
+
+    osc1.stop(now+0.3);
+    osc2.stop(now+0.3);
+}
+// ==========================================
+// INITIALIZE
+// ==========================================
+renderState();
 </script>
 </body>
 </html>
