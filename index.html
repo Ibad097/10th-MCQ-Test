@@ -1960,17 +1960,14 @@ function playAnswerSound(isCorrect){
 
     else{
 
-
         osc1.type="sine";
         osc2.type="square";
-
 
         osc1.frequency
         .setValueAtTime(
             200,
             now
         );
-
 
         osc1.frequency
         .exponentialRampToValueAtTime(
@@ -1978,13 +1975,11 @@ function playAnswerSound(isCorrect){
             now+0.10
         );
 
-
         osc2.frequency
         .setValueAtTime(
             500,
             now
         );
-
 
         osc2.frequency
         .exponentialRampToValueAtTime(
@@ -1992,21 +1987,17 @@ function playAnswerSound(isCorrect){
             now+0.10
         );
 
-
-
         gain.gain
         .setValueAtTime(
             0,
             now
         );
 
-
         gain.gain
         .linearRampToValueAtTime(
-            0.07,
+            0.03,
             now+0.01
         );
-
 
     }
 
