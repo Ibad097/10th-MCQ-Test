@@ -3,89 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SST MCQ Test</title>
+    <title>Class 10 Master MCQ Practice</title>
     <style>
         :root {
-            --primary: #3498db;
-            --primary-hover: #2980b9;
-            --success: #2ecc71;
-            --success-hover: #27ae60;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            --card-bg: #ffffff;
-            --text-dark: #1e293b;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --sst-color: #8b5cf6;
+            --science-color: #10b981;
+            --success: #22c55e;
+            --success-hover: #16a34a;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            --card-bg: rgba(255, 255, 255, 0.96);
+            --text-dark: #0f172a;
             --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
             font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: var(--bg-gradient);
             color: var(--text-dark);
-            margin: 0;
-            padding: 15px;
+            min-height: 100vh;
+            padding: 20px 15px;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            box-sizing: border-box;
         }
 
         .container {
-            max-width: 700px;
+            max-width: 800px;
             width: 100%;
             background: var(--card-bg);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            box-sizing: border-box;
+            padding: 35px 30px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
             position: relative;
-        }
-
-        h1 {
-            text-align: center;
-            color: var(--text-dark);
-            margin-top: 0;
-            margin-bottom: 25px;
-            font-size: 2.2em;
-            font-weight: 800;
-            letter-spacing: -0.5px;
         }
 
         .header-controls {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            gap: 10px;
         }
 
         .btn-back {
-            background: #e2e8f0;
+            background: #f1f5f9;
             color: #475569;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            padding: 10px 18px;
+            border-radius: 12px;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 700;
             display: none;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
+            font-size: 0.95em;
         }
 
         .btn-back:hover {
-            background: #cbd5e1;
+            background: #e2e8f0;
+            transform: translateX(-2px);
         }
 
-        /* Subject Grid (Screen 1) */
+        h1 {
+            text-align: center;
+            color: var(--text-dark);
+            font-size: 1.8em;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            flex-grow: 1;
+        }
+
+        /* Screen Grids */
+        .portal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 15px;
+        }
+
+        .portal-card {
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 35px 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 6px;
+        }
+
+        .portal-card.sst::before { background: var(--sst-color); }
+        .portal-card.science::before { background: var(--science-color); }
+
+        .portal-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .portal-icon { font-size: 3.5em; margin-bottom: 15px; display: block; }
+        .portal-title { font-size: 1.5em; font-weight: 800; margin-bottom: 8px; }
+        .portal-desc { font-size: 0.95em; color: var(--text-muted); line-height: 1.4; }
+
         .subject-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
         }
 
         .subject-card {
             background: #f8fafc;
             border: 2px solid #e2e8f0;
-            border-radius: 16px;
+            border-radius: 18px;
             padding: 25px 20px;
             text-align: center;
             cursor: pointer;
@@ -94,26 +140,18 @@
 
         .subject-card:hover {
             border-color: var(--primary);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.15);
+            transform: translateY(-4px);
+            background: #ffffff;
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.15);
         }
 
-        .subject-icon {
-            font-size: 3em;
-            margin-bottom: 10px;
-        }
+        .subject-icon { font-size: 2.5em; margin-bottom: 12px; }
+        .subject-title { font-size: 1.2em; font-weight: 700; color: var(--text-dark); }
 
-        .subject-title {
-            font-size: 1.4em;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        /* Lesson List (Screen 2) */
         .lesson-list {
-            display: none;
+            display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
         }
 
         .lesson-btn {
@@ -122,9 +160,9 @@
             align-items: center;
             background: #ffffff;
             border: 2px solid #e2e8f0;
-            padding: 16px 20px;
-            border-radius: 12px;
-            font-size: 1.1em;
+            padding: 18px 22px;
+            border-radius: 14px;
+            font-size: 1.05em;
             font-weight: 600;
             color: #334155;
             cursor: pointer;
@@ -138,67 +176,68 @@
             transform: translateX(4px);
         }
 
-        /* Grayed out state for empty lessons */
         .lesson-btn:disabled {
             background: #f1f5f9;
             color: #94a3b8;
-            border-color: #e2e8f0;
             cursor: not-allowed;
         }
 
         .badge {
             font-size: 0.75em;
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 20px;
             background: var(--primary);
             color: white;
-            font-weight: bold;
+            font-weight: 700;
         }
 
-        .badge.empty {
-            background: #cbd5e1;
-            color: #475569;
-        }
+        .badge.empty { background: #cbd5e1; color: #475569; }
 
         /* Setup & Quiz Screens */
         .setup-screen { display: none; text-align: center; }
-        .setup-screen h3 { font-size: 1.5em; margin-bottom: 10px; }
-        #totalFoundText { color: var(--text-muted); font-weight: 500; margin-bottom: 25px; }
+        .setup-screen h3 { font-size: 1.6em; margin-bottom: 10px; color: var(--text-dark); }
+        #totalFoundText { color: var(--text-muted); font-weight: 600; margin-bottom: 25px; }
 
         .select-style {
-            padding: 12px 16px;
-            font-size: 1em;
-            border-radius: 8px;
-            border: 2px solid #e2e8f0;
+            padding: 14px 18px;
+            font-size: 1.05em;
+            border-radius: 12px;
+            border: 2px solid #cbd5e1;
             background: #f8fafc;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             width: 100%;
-            max-width: 300px;
+            max-width: 320px;
             outline: none;
             cursor: pointer;
+            font-weight: 600;
+            color: var(--text-dark);
         }
 
         .btn-main {
-            padding: 14px 40px;
+            padding: 16px 40px;
             background: var(--primary);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 1.1em;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
             width: 100%;
-            max-width: 300px;
+            max-width: 320px;
             margin: 0 auto;
             display: block;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
-        .btn-main:hover { background: var(--primary-hover); transform: translateY(-2px); }
+        .btn-main:hover { 
+            background: var(--primary-hover); 
+            transform: translateY(-2px);
+        }
 
         .progress-bar-container {
             background: #e2e8f0;
-            height: 10px;
-            border-radius: 5px;
+            height: 12px;
+            border-radius: 6px;
             margin: 20px 0 10px 0;
             overflow: hidden;
         }
@@ -208,25 +247,25 @@
             width: 0%;
             transition: width 0.4s ease;
         }
-        .status-text { text-align: right; font-size: 0.9em; font-weight: 600; color: var(--text-muted); margin-bottom: 20px; }
+        .status-text { text-align: right; font-size: 0.95em; font-weight: 700; color: var(--text-muted); margin-bottom: 20px; }
 
-        /* Quiz Options */
-        .question-text { font-weight: 700; font-size: 1.3em; margin-bottom: 20px; line-height: 1.4; }
+        .question-text { font-weight: 700; font-size: 1.25em; margin-bottom: 22px; line-height: 1.45; color: var(--text-dark); }
         .options-container { display: flex; flex-direction: column; gap: 12px; }
         
         .option-label {
-            display: flex; align-items: center; gap: 14px;
-            padding: 16px; border: 2px solid #e2e8f0; border-radius: 10px;
-            cursor: pointer; font-weight: 500; transition: all 0.2s;
+            display: flex; align-items: center; gap: 16px;
+            padding: 16px 20px; border: 2px solid #e2e8f0; border-radius: 12px;
+            cursor: pointer; font-weight: 600; transition: all 0.2s;
+            background: #ffffff;
         }
         .option-label:hover { background: #f8fafc; border-color: #cbd5e1; }
         
         input[type="radio"] {
-            appearance: none; width: 22px; height: 22px; border: 2px solid #cbd5e1;
-            border-radius: 50%; display: grid; place-content: center; cursor: pointer;
+            appearance: none; width: 20px; height: 20px; border: 2px solid #cbd5e1;
+            border-radius: 50%; display: grid; place-content: center; cursor: pointer; flex-shrink: 0;
         }
         input[type="radio"]::before {
-            content: ""; width: 12px; height: 12px; border-radius: 50%;
+            content: ""; width: 10px; height: 10px; border-radius: 50%;
             transform: scale(0); transition: 120ms transform ease-in-out;
             background-color: var(--primary);
         }
@@ -237,29 +276,29 @@
         .correct-ans input[type="radio"]::before { background-color: white; }
         .correct-ans input[type="radio"] { border-color: white; }
 
-        .wrong-ans { background: var(--danger) !important; color: white !important; border-color: #c0392b !important; }
+        .wrong-ans { background: var(--danger) !important; color: white !important; border-color: #dc2626 !important; }
         .wrong-ans input[type="radio"]::before { background-color: white; }
         .wrong-ans input[type="radio"] { border-color: white; }
         
         .disable-click { pointer-events: none; }
 
         .nav-actions { display: flex; justify-content: space-between; margin-top: 30px; gap: 15px; }
-        .btn-nav { flex: 1; padding: 14px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1em; color: white; transition: 0.2s; }
+        .btn-nav { flex: 1; padding: 14px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 1em; color: white; transition: 0.2s; }
         #skipBtn { background: var(--warning); }
-        #skipBtn:hover:not(:disabled) { background: #d35400; }
-        #skipBtn:disabled { background: #e2e8f0 !important; color: #94a3b8; cursor: not-allowed; }
+        #skipBtn:hover:not(:disabled) { background: #d97706; }
+        #skipBtn:disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; }
         #nextBtn { background: var(--primary); }
         #nextBtn:hover:not(:disabled) { background: var(--primary-hover); }
         #nextBtn:disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; }
 
-        /* Results */
         .result-box { display: none; text-align: center; padding: 20px 0; }
-        .result-box h2 { font-size: 2em; margin-bottom: 10px; }
-        .result-box h3 { color: var(--text-muted); margin-bottom: 30px; }
+        .result-box h2 { font-size: 2.2em; margin-bottom: 10px; }
+        .result-box h3 { color: var(--text-muted); margin-bottom: 30px; font-weight: 600; }
 
         @media (max-width: 600px) {
-            .container { padding: 20px; border-radius: 12px; }
-            h1 { font-size: 1.8em; }
+            .container { padding: 25px 18px; border-radius: 18px; }
+            h1 { font-size: 1.4em; }
+            .portal-grid { grid-template-columns: 1fr; }
             .nav-actions { flex-direction: column; }
         }
     </style>
@@ -268,16 +307,30 @@
 
 <div class="container">
     <div class="header-controls">
-        <button class="btn-back" id="backBtn" onclick="goBack()">← Back</button>
-        <h1 id="mainTitle">SST MCQ Test</h1>
-        <div style="width: 70px;"></div> <!-- Spacer to keep title centered -->
+        <button class="btn-back" id="globalBackBtn" onclick="popNavigation()">← Back</button>
+        <h1 id="mainTitle">Class 10 Learning Portal</h1>
+        <div style="width: 70px;"></div>
     </div>
 
-    <!-- Screen 1: Subject Selection -->
-    <div id="subjectScreen" class="subject-grid"></div>
+    <!-- Screen 0: Portal Home -->
+    <div id="portalScreen" class="portal-grid">
+        <div class="portal-card sst" onclick="openCategory('sst')">
+            <span class="portal-icon">🌎</span>
+            <div class="portal-title">Social Science</div>
+            <div class="portal-desc">History, Geography, Civics, and Economics</div>
+        </div>
+        <div class="portal-card science" onclick="openCategory('science')">
+            <span class="portal-icon">🔬</span>
+            <div class="portal-title">Science</div>
+            <div class="portal-desc">Physics, Chemistry, and Biology</div>
+        </div>
+    </div>
+
+    <!-- Screen 1: Sub-Subject Selection -->
+    <div id="subjectScreen" class="subject-grid" style="display:none;"></div>
 
     <!-- Screen 2: Lesson Selection -->
-    <div id="lessonScreen" class="lesson-list"></div>
+    <div id="lessonScreen" class="lesson-list" style="display:none;"></div>
 
     <!-- Screen 3: Setup Quiz -->
     <div id="setupScreen" class="setup-screen">
@@ -295,7 +348,7 @@
         <div class="status-text" id="statusText">Question 1 of 0</div>
         <div id="dynamicQuestionBox"></div>
         <div class="nav-actions">
-            <button style="color: #ffffff; background: #31d931;" class="btn-nav" id="backBtn" onclick="goBack()">← Home</button>
+            <button style="background: #10b981;" class="btn-nav" onclick="exitToHome()">🏠 Home</button>
             <button class="btn-nav" id="skipBtn" onclick="skipQuestion()">Skip</button>
             <button class="btn-nav" id="nextBtn" onclick="nextQuestion()" disabled>Next Question</button>
         </div>
@@ -306,25 +359,18 @@
 </div>
 
 <script>
-    // =====================================================================
-    // 📚 QUIZ DATABASE - ADD YOUR QUESTIONS HERE!
-    // Format required:
-    // Question Line
-    // Correct Answer Line
-    // Option 2 Line
-    // Option 3 Line
-    // Option 4 Line
-    // (Leave a blank line between questions)
-    // =====================================================================
-    
-    const quizDatabases = {
-        history: {
-            icon: "📜",
-            title: "History",
-            lessons: [
-                {
-                    name: "Lesson 1: Rise of Nationalism in Europe",
-                    data: `
+    const masterDatabase = {
+        sst: {
+            title: "Social Science",
+            icon: "🌎",
+            subjects: {
+                history: {
+                    icon: "📜",
+                    title: "History",
+                    lessons: [
+                        {
+                            name: "Lesson 1: The Rise of Nationalism in Europe",
+                            data: `
 When was Guiseppe Mazzini born:
 1805
 1807
@@ -625,10 +671,10 @@ Heroism
 Power
 Will to Die for nation
 `
-                },
-                {
-                    name: "Lesson 2: Nationalism in India",
-                    data: `
+                        },
+                        {
+                            name: "Lesson 2: Nationalism in India",
+                            data: `
 What was the main objective of the Rowlatt Act (1919)?
 To give the government extraordinary powers to suppress political activities
 To grant India complete independence
@@ -845,14 +891,14 @@ March 1920
 Janauary 1920
 March 1921
 ` 
-                },
-                {
-                    name: "Lesson 3: The Making of a Global World",
-                    data: `` 
-                },
-                {
-                    name: "Lesson 4: Print Culture and the Modern World",
-                    data: `
+                        },
+                        {
+                            name: "Lesson 3: The Making of a Global World",
+                            data: `` 
+                        },
+                        {
+                            name: "Lesson 4: Print Culture and the Modern World",
+                            data: `
 How many copies of Guttenberg's Bible were printed in the first 3 years of its publication:
 180
 120
@@ -1033,372 +1079,396 @@ Diamond Sutra
 Tripitaka
 Amar Jiban
 ` 
+                        },
+                        {
+                            name: "Lesson 5: Post Independence Era: J & K",
+                            data: `` 
+                        }
+                    ]
                 },
-                {
-                    name: "Lesson 5: Post Independence Era: J & K",
-                    data: `` 
-                }
-            ]
+                geography: {
+                    icon: "🌍",
+                    title: "Geography",
+                    lessons: [
+                        { 
+                            name: "Lesson 1: Resources and Development", 
+                            data: `` 
+                        },
+                        { 
+                            name: "Lesson 2: Forest and Wildlife Resources",
+                            data: `` 
+                        },
+                        { 
+                            name: "Lesson 3: Water Resources",
+                            data: `` 
+                        },
+                        { 
+                            name: "Lesson 4: Agriculture",
+                            data: `` 
+                        },
+                        { 
+                            name: "Lesson 5: Minerals and Energy Resources",
+                            data: `` 
+                        }
+                    ]
+                },
+                civics: {
+                    icon: "🏛️",
+                    title: "Civics",
+                    lessons: [
+                        { 
+                            name: "Lesson 1: Power Sharing", 
+                            data: `` 
+                        },
+                        {
+                            name: "Lesson 2: Federalism",
+                            data: `` 
+                        },
+                        {
+                            name: "Lesson 3: Gender, Religion and Caste",
+                            data: `` 
+                        },
+                        { 
+                            name: "Lesson 4: Political Parties",
+                            data: `` 
+                        },
+                        { 
+                            name: "Lesson 5: Outcomes of Democracy",
+                            data: `` 
+                        }
+                    ]
+                },
+                economics: {
+                    icon: "💰",
+                    title: "Economics",
+                    lessons: [
+                        { 
+                            name: "Lesson 1: Development", 
+                            data: `` 
+                        },
+                        { 
+                            name: "Lesson 2: Sectors of the Indian Economy",
+                            data: `` 
+                        }
+                    ]
+                },
+                    "DM,RSE": {
+                    icon: "🌪️+🚗",
+                    title: "DM,RSE",
+                    lessons: [
+                        { 
+                            name: "Lesson 1: Disaster Management", 
+                            data: `` 
+                        },
+                        { 
+                            name: "Lesson 2: Road Safety Education",
+                            data: `` 
+                        },
+                    ]
+                },
+                                    "Full Syllabus Test": {
+                    icon: "📚",
+                    title: "Full Syllabus Test",
+                    lessons: [
+                        { 
+                            name: "Start Full Syllabus Test (history,geogrphy,economics,DM,RSE)", 
+                            data: `` 
+                        },
+                    ]
+                    },
+                
+            }
         },
-        geography: {
-            icon: "🌍",
-            title: "Geography",
-            lessons: [
-                { name: "Lesson 1: Resources and Development", data: `` },
-                { name: "Lesson 2: Forest and Wildlife Resources", data: `` },
-                { name: "Lesson 3: Water Resources", data: `` },
-                { name: "Lesson 4: Agriculture", data: `` },
-                { name: "Lesson 5: Minerals and Energy Resources", data: `` }
-            ]
-        },
-        civics: {
-            icon: "🏛️",
-            title: "Civics",
-            lessons: [
-                { name: "Lesson 1: Power Sharing", data: `` },
-                { name: "Lesson 2: Federalism", data: `` },
-                { name: "Lesson 3: Gender, Religion and Caste", data: `` },
-                { name: "Lesson 4: Political Parties", data: `` },
-                { name: "Lesson 5: Outcomes of Democracy", data: `` },
-                { name: "Lesson 6: Challenges to Democracy", data: `` }
-            ]
-        },
-        economics: {
-            icon: "💰",
-            title: "Economics, DM, RSE",
-            lessons: [
-                { name: "Lesson 1: Development", data: `` },
-                { name: "Lesson 2: Sectors of the Indian Economy", data: `` },
-                { name: "Disaster Management", data: `` },
-                { name: "Road Safety", data: `` }
-            ]
+        science: {
+            title: "Science",
+            icon: "🔬",
+            subjects: {
+                physics: {
+                    icon: "⚡",
+                    title: "Physics",
+                    lessons: []
+                },
+                chemistry: {
+                    icon: "🧪",
+                    title: "Chemistry",
+                    lessons: []
+                },
+                biology: {
+                    icon: "🧬",
+                    title: "Biology",
+                    lessons: []
+                },
+                "Full Syllabus Test": {
+                icon: "📚",
+                title: "Full Syllabus Test",
+                lessons: [
+                    { 
+                        name: "Start Full Syllabus Test (Physics,Chemistry,Biology)", 
+                        data: `` 
+                    },
+                ]
+                },
+            }
         }
     };
 
-    // =====================================================================
-    // APPLICATION LOGIC
-    // =====================================================================
-
-    let currentQuizSource = "";
-    let globalParsedBank = [];
-    let activeQuizBank = [];
-    let retryBank = []; // Tracks questions missed or skipped
-    let currentQuestionIndex = 0;
+    // State Navigation Stack
+    let navHistory = [{ screen: 'portalScreen', title: 'Class 10 Learning Portal' }];
+    let currentCategoryKey = null;
+    let currentSubjectKey = null;
+    let currentLesson = null;
+    let parsedQuestions = [];
+    let currentQuizQueue = [];
+    let currentIndex = 0;
     let score = 0;
-    let currentScreen = "home"; 
+    let answered = false;
 
-    // Initialize Home Screen
-    function init() {
-        const subjectScreen = document.getElementById('subjectScreen');
-        subjectScreen.innerHTML = '';
+    // Navigation Stack Logic
+    function pushNavigation(screenId, title) {
+        navHistory.push({ screen: screenId, title: title });
+        renderState();
+    }
+
+    function popNavigation() {
+        if (navHistory.length > 1) {
+            navHistory.pop();
+            renderState();
+        }
+    }
+
+    function renderState() {
+        const currentState = navHistory[navHistory.length - 1];
         
-        for (const [key, subject] of Object.entries(quizDatabases)) {
+        // Hide all screens
+        ['portalScreen', 'subjectScreen', 'lessonScreen', 'setupScreen', 'quizApp', 'resultBox'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+        });
+
+        // Show active screen
+        const active = document.getElementById(currentState.screen);
+        if (active) {
+            if (currentState.screen === 'portalScreen' || currentState.screen === 'subjectScreen') {
+                active.style.display = 'grid';
+            } else if (currentState.screen === 'lessonScreen') {
+                active.style.display = 'flex';
+            } else {
+                active.style.display = 'block';
+            }
+        }
+
+        // Title and Back Button state
+        document.getElementById('mainTitle').innerText = currentState.title;
+        const backBtn = document.getElementById('globalBackBtn');
+        backBtn.style.display = navHistory.length > 1 ? 'inline-block' : 'none';
+    }
+
+    function openCategory(catKey) {
+        currentCategoryKey = catKey;
+        const cat = masterDatabase[catKey];
+        const grid = document.getElementById('subjectScreen');
+        grid.innerHTML = '';
+
+        for (const [subKey, subObj] of Object.entries(cat.subjects)) {
             const card = document.createElement('div');
             card.className = 'subject-card';
-            card.onclick = () => showLessons(key);
+            card.onclick = () => openSubject(subKey);
             card.innerHTML = `
-                <div class="subject-icon">${subject.icon}</div>
-                <div class="subject-title">${subject.title}</div>
+                <div class="subject-icon">${subObj.icon}</div>
+                <div class="subject-title">${subObj.title}</div>
             `;
-            subjectScreen.appendChild(card);
+            grid.appendChild(card);
         }
-        navigate("home");
+
+        pushNavigation('subjectScreen', cat.title);
     }
 
-    function showLessons(subjectKey) {
-        const subject = quizDatabases[subjectKey];
-        const lessonScreen = document.getElementById('lessonScreen');
-        document.getElementById('mainTitle').innerText = `${subject.icon} ${subject.title}`;
-        lessonScreen.innerHTML = '';
+    function openSubject(subKey) {
+        currentSubjectKey = subKey;
+        const subObj = masterDatabase[currentCategoryKey].subjects[subKey];
+        const list = document.getElementById('lessonScreen');
+        list.innerHTML = '';
 
-        subject.lessons.forEach((lesson, index) => {
-            const hasData = lesson.data.trim().length > 0;
-            const btn = document.createElement('button');
-            btn.className = 'lesson-btn';
-            btn.disabled = !hasData;
-            
-            btn.innerHTML = `
-                <span>${lesson.name}</span>
-                <span class="badge ${hasData ? '' : 'empty'}">${hasData ? 'Ready' : 'No Data'}</span>
-            `;
+        if (!subObj.lessons || subObj.lessons.length === 0) {
+            list.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--text-muted); font-weight:600;">No lessons available yet in this category.</div>`;
+        } else {
+            subObj.lessons.forEach(lesson => {
+                const qCount = parseRawData(lesson.data).length;
+                const btn = document.createElement('button');
+                btn.className = 'lesson-btn';
+                btn.disabled = qCount === 0;
+                btn.onclick = () => openSetup(lesson);
+                btn.innerHTML = `
+                    <span>${lesson.name}</span>
+                    <span class="badge ${qCount === 0 ? 'empty' : ''}">${qCount} Qs</span>
+                `;
+                list.appendChild(btn);
+            });
+        }
 
-            if (hasData) {
-                btn.onclick = () => prepareSetupScreen(lesson.data, lesson.name);
-            }
-            lessonScreen.appendChild(btn);
+        pushNavigation('lessonScreen', subObj.title);
+    }
+
+    function openSetup(lesson) {
+        currentLesson = lesson;
+        parsedQuestions = parseRawData(lesson.data);
+        
+        document.getElementById('setupLessonTitle').innerText = lesson.name;
+        document.getElementById('totalFoundText').innerText = `Total questions available: ${parsedQuestions.length}`;
+
+        const select = document.getElementById('quantitySelect');
+        select.innerHTML = '';
+
+        const counts = [5, 10, 15, 20, 25, 30, 40, 50].filter(c => c <= parsedQuestions.length);
+        if (!counts.includes(parsedQuestions.length) && parsedQuestions.length > 0) {
+            counts.push(parsedQuestions.length);
+        }
+
+        counts.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c;
+            opt.innerText = c === parsedQuestions.length ? `All Questions (${c})` : `${c} Questions`;
+            select.appendChild(opt);
         });
 
-        navigate("lessons");
+        pushNavigation('setupScreen', 'Quiz Setup');
     }
 
-    function prepareSetupScreen(rawTextData, title) {
-        document.getElementById('mainTitle').innerText = "Quiz Setup";
-        document.getElementById('setupLessonTitle').innerText = title;
-        currentQuizSource = rawTextData;
-        
-        if(parseData()) {
-            navigate("setup");
-        }
-    }
-
-    function parseData() {
-        const blocks = currentQuizSource.trim().split(/\r?\n\s*\r?\n/);
-        globalParsedBank = [];
+    // Question Parser Utility
+    function parseRawData(rawText) {
+        if (!rawText || !rawText.trim()) return [];
+        const blocks = rawText.trim().split(/\n\s*\n/);
+        const questions = [];
 
         blocks.forEach(block => {
-            const lines = block.split(/\r?\n/).map(line => line.trim()).filter(line => line.length > 0);
-            if (lines.length < 2) return;
-            const question = lines[0];
-            const correctAnswer = lines[1];
-            
-            let options = [...lines.slice(1)];
-            for (let i = options.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [options[i], options[j]] = [options[j], options[i]];
+            const lines = block.trim().split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            if (lines.length >= 5) {
+                const qText = lines[0];
+                const correctAns = lines[1]; // First line following question is the correct answer
+                const allOpts = lines.slice(1, 5);
+                
+                questions.push({
+                    question: qText,
+                    answer: correctAns,
+                    options: allOpts
+                });
             }
-            globalParsedBank.push({ question, options, correctAnswer });
         });
 
-        const totalQuestions = globalParsedBank.length;
-        if (totalQuestions === 0) {
-            alert("No valid questions parsed from this layout! Ensure there are no extra blank lines between options.");
-            return false;
-        }
-
-        document.getElementById('totalFoundText').innerText = `Total questions available: ${totalQuestions}`;
-
-        const divisors = [10, 4, 2, 1];
-        let structuralOptions = []; 
-        divisors.forEach(div => {
-            let val = Math.floor(totalQuestions / div);
-            if (val > 0) structuralOptions.push(val);
-        });
-
-        let uniqueOptions = [...new Set(structuralOptions)].sort((a, b) => a - b);
-        const selectDropdown = document.getElementById('quantitySelect');
-        selectDropdown.innerHTML = '';
-        
-        uniqueOptions.forEach(count => {
-            let labelText = (count === totalQuestions) ? `All (${count} Questions)` : `${count} Questions`;
-            let optElem = document.createElement('option');
-            optElem.value = count;
-            optElem.innerText = labelText;
-            selectDropdown.appendChild(optElem);
-        });
-        
-        selectDropdown.value = totalQuestions;
-        return true;
+        return questions;
     }
 
+    // Quiz Execution
     function startQuizGameplay() {
-        const selectedCount = parseInt(document.getElementById('quantitySelect').value);
+        const select = document.getElementById('quantitySelect');
+        const count = parseInt(select.value) || parsedQuestions.length;
+
+        // Shuffle questions
+        currentQuizQueue = [...parsedQuestions].sort(() => Math.random() - 0.5).slice(0, count);
+        currentIndex = 0;
+        score = 0;
+
+        pushNavigation('quizApp', currentLesson.name);
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        answered = false;
+        const q = currentQuizQueue[currentIndex];
         
-        let tempBank = [...globalParsedBank];
-        for (let i = tempBank.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [tempBank[i], tempBank[j]] = [tempBank[j], tempBank[i]];
-        }
-        activeQuizBank = tempBank.slice(0, selectedCount);
+        // Progress Bar & Status
+        const progress = ((currentIndex) / currentQuizQueue.length) * 100;
+        document.getElementById('progressFill').style.width = `${progress}%`;
+        document.getElementById('statusText').innerText = `Question ${currentIndex + 1} of ${currentQuizQueue.length}`;
 
-        currentQuestionIndex = 0;
-        score = 0;
-        retryBank = []; // Reset retry bank on fresh run
-        navigate("quiz");
-        showQuestion();
-    }
+        // Shuffle options for display
+        const shuffledOpts = [...q.options].sort(() => Math.random() - 0.5);
 
-    // New start function purely for retrying mistakes/skips
-    function startRetryGameplay() {
-        activeQuizBank = [...retryBank]; // Replace active questions with the ones we got wrong
-        currentQuestionIndex = 0;
-        score = 0;
-        retryBank = []; // Reset the retry bank for THIS attempt
-        navigate("quiz");
-        showQuestion();
-    }
-
-    function showQuestion() {
         const container = document.getElementById('dynamicQuestionBox');
-        const item = activeQuizBank[currentQuestionIndex];
-        
-        document.getElementById('statusText').innerText = `Question ${currentQuestionIndex + 1} of ${activeQuizBank.length}`;
-        const progressPercent = (currentQuestionIndex / activeQuizBank.length) * 100;
-        document.getElementById('progressFill').style.width = `${progressPercent}%`;
-        
-        const nextBtn = document.getElementById('nextBtn');
-        nextBtn.disabled = true;
-        document.getElementById('skipBtn').disabled = false;
-        nextBtn.innerText = (currentQuestionIndex === activeQuizBank.length - 1) ? "Finish Quiz" : "Next Question";
-
-        let optionsHTML = '';
-        item.options.forEach((opt, oIdx) => {
-            optionsHTML += `
-                <label class="option-label">
-                    <input type="radio" name="current_opts" value="${opt.replace(/"/g, '&quot;')}" onclick="checkAnswer(this)">
-                    <span>${opt}</span>
-                </label>
-            `;
-        });
-
         container.innerHTML = `
-            <div>
-                <div class="question-text">${item.question}</div>
-                <div class="options-container" id="optionsGroup">${optionsHTML}</div>
+            <div class="question-text">${currentIndex + 1}. ${q.question}</div>
+            <div class="options-container" id="optionsGroup">
+                ${shuffledOpts.map((opt, i) => `
+                    <label class="option-label" id="optLabel_${i}">
+                        <input type="radio" name="quizOpt" value="${escapeHtml(opt)}" onchange="selectOption(this, '${escapeHtml(q.answer)}')">
+                        <span>${escapeHtml(opt)}</span>
+                    </label>
+                `).join('')}
             </div>
         `;
+
+        document.getElementById('nextBtn').disabled = true;
+        document.getElementById('skipBtn').disabled = false;
     }
 
-    function checkAnswer(selectedRadio) {
-        document.getElementById('skipBtn').disabled = true;
-        const item = activeQuizBank[currentQuestionIndex];
-        const optionsGroup = document.getElementById('optionsGroup');
-        const labels = optionsGroup.getElementsByClassName('option-label');
+    function escapeHtml(str) {
+        return str.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
+    }
 
-        optionsGroup.classList.add('disable-click');
+    function selectOption(inputEl, correctAnswer) {
+        if (answered) return;
+        answered = true;
 
-        for (let label of labels) {
-            const radioInput = label.querySelector('input');
-            if (radioInput.value === item.correctAnswer) {
-                label.classList.add('correct-ans');
-            } else if (radioInput.checked) {
-                label.classList.add('wrong-ans');
+        const selectedVal = inputEl.value;
+        const labels = document.querySelectorAll('.option-label');
+        
+        labels.forEach(lbl => {
+            lbl.classList.add('disable-click');
+            const inp = lbl.querySelector('input');
+            if (inp.value === correctAnswer) {
+                lbl.classList.add('correct-ans');
             }
-        }
+        });
 
-        if (selectedRadio.value === item.correctAnswer) {
+        if (selectedVal === correctAnswer) {
             score++;
         } else {
-            retryBank.push(item); // They got it wrong, add to retry bank
+            inputEl.closest('.option-label').classList.add('wrong-ans');
         }
 
         document.getElementById('nextBtn').disabled = false;
-    }
-
-    function skipQuestion() {
-        const optionsGroup = document.getElementById('optionsGroup');
-        if (optionsGroup && optionsGroup.classList.contains('disable-click')) return;
-
-        // They skipped it, so add to retry bank and move on
-        retryBank.push(activeQuizBank[currentQuestionIndex]);
-        
-        if (currentQuestionIndex < activeQuizBank.length - 1) {
-            currentQuestionIndex++;
-            showQuestion();
-        } else {
-            finishQuiz();
-        }
+        document.getElementById('skipBtn').disabled = true;
     }
 
     function nextQuestion() {
-        if (currentQuestionIndex < activeQuizBank.length - 1) {
-            currentQuestionIndex++;
-            showQuestion();
+        if (currentIndex < currentQuizQueue.length - 1) {
+            currentIndex++;
+            renderQuestion();
         } else {
-            finishQuiz();
+            showResults();
         }
     }
 
-    function finishQuiz() {
-        document.getElementById('progressFill').style.width = '100%';
-        const resBox = document.getElementById('resultBox');
-        
-        const percentage = Math.round((score / activeQuizBank.length) * 100);
-        
-        // Generate the Retry Button if they missed or skipped anything
-        let retryButtonHTML = '';
-        if(retryBank.length > 0) {
-            retryButtonHTML = `
-                <button class="btn-main" style="background: var(--warning); margin-bottom: 15px;" onclick="startRetryGameplay()">
-                    🔄 Retry Incorrect/Skipped (${retryBank.length})
-                </button>
-            `;
-        }
+    function skipQuestion() {
+        if (answered) return;
+        nextQuestion();
+    }
 
-        resBox.innerHTML = `
-            <h2>🎉 Quiz Completed!</h2>
-            <h3>Your Final Score: ${score} / ${activeQuizBank.length} (${percentage}%)</h3>
-            ${retryButtonHTML}
-            <button class="btn-main" style="background: var(--text-muted);" onclick="init()">🔙 Back to Main Menu</button>
+    function showResults() {
+        const pct = Math.round((score / currentQuizQueue.length) * 100);
+        const box = document.getElementById('resultBox');
+        
+        let emoji = "🎉";
+        if (pct < 50) emoji = "📚";
+        else if (pct < 80) emoji = "👍";
+
+        box.innerHTML = `
+            <div style="font-size: 4em; margin-bottom: 10px;">${emoji}</div>
+            <h2>Quiz Completed!</h2>
+            <h3>Your Score: ${score} / ${currentQuizQueue.length} (${pct}%)</h3>
+            <button class="btn-main" onclick="exitToHome()">Return to Home</button>
         `;
-        navigate("results");
+
+        pushNavigation('resultBox', 'Quiz Result');
     }
 
-    // Easy Screen Management
-    function navigate(screen) {
-        currentScreen = screen;
-        document.getElementById('subjectScreen').style.display = screen === 'home' ? 'grid' : 'none';
-        document.getElementById('lessonScreen').style.display = screen === 'lessons' ? 'flex' : 'none';
-        document.getElementById('setupScreen').style.display = screen === 'setup' ? 'block' : 'none';
-        document.getElementById('quizApp').style.display = screen === 'quiz' ? 'block' : 'none';
-        document.getElementById('resultBox').style.display = screen === 'results' ? 'block' : 'none';
-
-        // Manage Header Back Button & Titles
-        const backBtn = document.getElementById('backBtn');
-        if (screen === 'home') {
-            backBtn.style.display = 'none';
-            document.getElementById('mainTitle').innerText = "SST MCQ Test";
-        } else if (screen === 'lessons') {
-            backBtn.style.display = 'block';
-        } else if (screen === 'setup') {
-            backBtn.style.display = 'block';
-        } else {
-            backBtn.style.display = 'none';
-        }
+    function exitToHome() {
+        navHistory = [{ screen: 'portalScreen', title: 'Class 10 Learning Portal' }];
+        renderState();
     }
 
-            // Initialize the audio context
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        function playSound(isCorrect) {
-            // Browsers require audio context to be resumed after user interaction
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            
-            const now = audioCtx.currentTime;
-            
-            if (isCorrect) {
-                // Correct Sound: A low, soft, pleasant chime (Sine wave)
-                oscillator.type = 'sine';
-                oscillator.frequency.setValueAtTime(400, now); 
-                oscillator.frequency.exponentialRampToValueAtTime(600, now + 0.1); 
-                
-                // Volume envelope (low volume: 0.1)
-                gainNode.gain.setValueAtTime(0, now);
-                gainNode.gain.linearRampToValueAtTime(0.1, now + 0.05);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
-                
-                oscillator.start(now);
-                oscillator.stop(now + 0.5);
-            } else {
-                // Wrong Sound: A dull, descending sound (Triangle wave)
-                oscillator.type = 'triangle';
-                oscillator.frequency.setValueAtTime(250, now);
-                oscillator.frequency.exponentialRampToValueAtTime(150, now + 0.2); 
-                
-                // Volume envelope (low volume: 0.1)
-                gainNode.gain.setValueAtTime(0, now);
-                gainNode.gain.linearRampToValueAtTime(0.1, now + 0.05);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-                
-                oscillator.start(now);
-                oscillator.stop(now + 0.4);
-            }
-        }
-
-    function goBack() {
-        if (currentScreen === 'lessons') init();
-        else if (currentScreen === 'setup') document.getElementById('backBtn').onclick = () => init(); 
-        init(); // Default fallback
-    }
-
-    // Run on boot
-    init();
-
+    // Initialize initial state
+    renderState();
 </script>
 </body>
 </html>
